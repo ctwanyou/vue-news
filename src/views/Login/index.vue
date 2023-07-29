@@ -9,7 +9,7 @@ const form = ref({
     password: '',
     agree: true
 })
-// 1 准备规则对象
+// 2 准备规则对象
 const rules = {
     account: [
         { required: true, message: '用户名不得为空', trigger: 'blur' }
@@ -31,6 +31,16 @@ const rules = {
             }
         }
     ]
+}
+//3 获取表单实例，做统一校验
+const formRef=ref(null)
+const doLogin=()=>{
+    formRef.value.validate((valid)=>{
+        // console.log(valid);
+        if(valid){
+            //执行登陆接口
+        }
+    })
 }
 </script>
 
@@ -56,7 +66,7 @@ const rules = {
                 </nav>
                 <div class="account-box">
                     <div class="form">
-                        <el-form :model="form" :rules="rules" label-position="right" label-width="60px" status-icon>
+                        <el-form ref="formRef" :model="form" :rules="rules" label-position="right" label-width="60px" status-icon>
                             <el-form-item prop="account" label="账户">
                                 <el-input v-model="form.account" placeholder="请输入用户名" clearable />
                             </el-form-item>
@@ -69,7 +79,7 @@ const rules = {
                                     我已同意隐私条款和服务条款
                                 </el-checkbox>
                             </el-form-item>
-                            <el-button size="large" type="success" class="subBtn">点击登录</el-button>
+                            <el-button size="large" type="success" class="subBtn" @click="doLogin">点击登录</el-button>
                         </el-form>
                     </div>
                 </div>
