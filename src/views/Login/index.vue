@@ -1,17 +1,24 @@
 <script setup>
+//解析jwt
 
-
+import { ElMessage } from 'element-plus'
+import 'element-plus/theme-chalk/el-message.css'
+import {useUserStore} from '@/stores/user'
 import { ref } from 'vue'
+import { useRouter } from 'vue-router'
+//import { LoginAPI } from '@/apis/userAPI';
 
+
+const userStore=useUserStore()
 // 1 准备表单对象 并绑定
 const form = ref({
-    account: '',
+    name: '',
     password: '',
     agree: true
 })
 // 2 准备规则对象
 const rules = {
-    account: [
+    name: [
         { required: true, message: '用户名不得为空', trigger: 'blur' }
     ],
     password: [
@@ -33,15 +40,29 @@ const rules = {
     ]
 }
 //3 获取表单实例，做统一校验
-const formRef=ref(null)
-const doLogin=()=>{
-    formRef.value.validate((valid)=>{
+const formRef = ref(null)
+const router = useRouter()
+const doLogin = () => {
+    const { name, password } = form.value
+    formRef.value.validate(async (valid) => {
         // console.log(valid);
-        if(valid){
+        if (valid) {
             //执行登陆接口
+            // const res = await LoginAPI({ name, password })
+            // //const  jwt = require('jsonwebtoken');
+            // //const str = jwt.decode(res.headers['jwt']) //解码(data.data代表的是解析的数据)
+            // console.log(res.headers['jwt']);
+           // console.log(str)
+           await userStore.getUserInfo({ name, password })
+            ElMessage({ type: 'success', message: '登陆成功' })
+
+            router.replace({ path: '/NewAdmin' })
+
         }
     })
 }
+
+
 </script>
 
 
@@ -66,9 +87,10 @@ const doLogin=()=>{
                 </nav>
                 <div class="account-box">
                     <div class="form">
-                        <el-form ref="formRef" :model="form" :rules="rules" label-position="right" label-width="60px" status-icon>
-                            <el-form-item prop="account" label="账户">
-                                <el-input v-model="form.account" placeholder="请输入用户名" clearable />
+                        <el-form ref="formRef" :model="form" :rules="rules" label-position="right" label-width="60px"
+                            status-icon>
+                            <el-form-item prop="name" label="账户">
+                                <el-input v-model="form.name" placeholder="请输入用户名" clearable />
                             </el-form-item>
                             <el-form-item prop="password" label="密码">
                                 <el-input v-model="form.password" placeholder="请输入密码" clearable type="password"
@@ -322,4 +344,5 @@ const doLogin=()=>{
     /* background: #cfcdcd; */
     width: 100%;
     /* color: #fff; */
-}</style>
+}
+</style>
