@@ -60,8 +60,23 @@ ul {
   /* background: #f5f5f5; */
   user-select: none;
 }
+.cont_table{
+  font:14px 宋体;
+  border:2px #000 solid;
+  text-align:center;
+  border-collapse:collapse;
+  margin:15px;
+}
+.cont_table td{
+  border:1px #000 solid;
+  padding:10px;
+}
+.cont_table th{
+  border:1px #000 solid;
+  padding:10px;
+}
 
-.container {
+/* .container {
   width: 1240px;
   margin: 0 auto;
   position: relative;
@@ -98,7 +113,7 @@ ul {
   clear: both;
 }
 
-// reset element
+
 .el-breadcrumb__inner.is-link {
   font-weight: 400 !important;
-}
+} */
