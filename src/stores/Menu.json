@@ -1,0 +1,71 @@
+[
+    {
+      "id": 1,
+      "title": "用户管理",
+      "icon": "User",
+      "Path": null,
+      "children": [
+        {
+          "id": "1-0",
+          "title": "用户添加",
+          "icon": "DocumentAdd",
+          "Path": "createUser"          
+        },
+        {
+          "id": "1-1",
+          "title": "编辑用户",
+          "icon": "User",
+          "Path": "EditUser"
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "title": "文章类别",
+      "icon": "Memo",
+      "Path": null,
+      "children": [
+        {
+          "id": "1-2",
+          "title": "修改类别",
+          "icon": "Notebook",
+          "Path": "editCategory"
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "title": "新闻管理",
+      "icon": "Document",
+      "Path": null,
+      "children": [
+        {
+          "id": "3-1",
+          "title": "添加新闻",
+          "icon": "CirclePlus",
+          "Path": "addNews"
+        },
+        {
+          "id": "3-2",
+          "title": "新闻编辑",
+          "icon": "Edit",
+          "Path": "editNews"
+        }
+      ]
+    },
+    {
+      "id": 6,
+      "title": "修改密码",
+      "icon": "SetUp",
+      "Path":"ResetPassword"
+     
+    },
+    {
+      "id": 7,
+      "title": "退出登陆",
+      "icon": "Hide",
+      "Path":"ResetPassword"
+     
+    }
+  
+  ]

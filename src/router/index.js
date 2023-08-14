@@ -3,9 +3,10 @@ import Login from '@/views/Login/index.vue'
 
 import Layout from '@/views/Layout/index.vue'
 import NewAdmin from '@/views/NewAdmin/index.vue'
-import addNews from '@/views/NewAdmin/addNews.vue'
-import editNews from '@/views/NewAdmin/editNews.vue'
-import editCategory from '@/views/NewAdmin/editCategory.vue'
+import addNews from '@/views/NewAdmin/component/addNews.vue'
+import editNews from '@/views/NewAdmin/component/editNews.vue'
+import editCategory from '@/views/NewAdmin/component/editCategory.vue'
+import test from '@/views/test/index.vue'
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
@@ -18,6 +19,11 @@ const router = createRouter({
       component: Login
     },
     {
+      path:'/test/',
+      component:test
+    },
+    {
+      name:'newadmin',
       path: '/NewAdmin',
       component: NewAdmin,
       children: [

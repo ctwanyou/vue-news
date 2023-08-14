@@ -1,6 +1,6 @@
 import axios from 'axios'
-
-import { ElMessage } from 'element-plus'
+import { ref} from 'vue'
+import { ElMessage,ElLoading } from 'element-plus'
 import 'element-plus/theme-chalk/el-message.css'
 import router from '@/router'
 import { useUserStore } from '@/stores/user'
@@ -11,9 +11,17 @@ const http = axios.create({
     timeout: 5000
 
 })
-
+const LoadingObj=ref(null)
 // axios请求拦截器
 http.interceptors.request.use(config => {
+    //LoadingObj.vlaue={""},
+    LoadingObj.value = ElLoading.service({
+        lock: true,
+        text: '加载中……',
+        background: 'rgba(0, 0, 0, 0.7)',
+    })
+    
+
     //1 从pinia中拿到数据
     const userStore = useUserStore()
     //按后端要求拼接数据
@@ -27,10 +35,13 @@ http.interceptors.request.use(config => {
 
 // axios响应式拦截器
 http.interceptors.response.use(res => {
+    LoadingObj.value.close()
+    //没有添加加载中的
     // const head=res.headers
     // console.log(head);
     return res
 }, e => {
+    LoadingObj.value.close()
     const userStore = useUserStore()
     //const router = useRouter()
     ElMessage({ type: 'warning', message: e.response.data })

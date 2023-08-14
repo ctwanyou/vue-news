@@ -4,7 +4,7 @@ import 'element-plus/theme-chalk/el-message.css'
 import { addOneCategory, getOneCategoryList, editOneCategoryOrder, editTwoCategoryOrder, delCategory, editCategory, getTwoCategoryList, addTwoCategory } from '@/apis/categoryAPI.js'
 //导入图标
 import { Top, Bottom, Check, Delete } from '@element-plus/icons-vue'
-import breadCrumb from './component/breadCrumb.vue'
+import breadCrumb from './breadCrumb.vue'
 import { ref, onMounted } from 'vue'
 import router from '@/router'
 
