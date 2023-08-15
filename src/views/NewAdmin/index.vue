@@ -17,7 +17,7 @@ const jwtCheck = async () => {
 const getRouterData=(routerData)=>{
     //routerData.modulePath=() => import(routerData.modulePath)
     mainRouter.value.openMainRouterView(routerData)
-    console.log(routerData);
+    //console.log(routerData);
 }
 const userName = ref('')
 onMounted(() => {

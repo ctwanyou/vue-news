@@ -69,7 +69,8 @@ const openMainRouterView = (config) => {
         params: {}
     }
     Object.assign(routerObj, config)
-    console.log(routerObj)
+    //打印添加的路由
+    //console.log(routerObj)
     var name = routerObj.name
     var hasRoute = router.hasRoute(name)
     if (!hasRoute) {
@@ -88,7 +89,8 @@ const openMainRouterView = (config) => {
             tabIcon: routerObj.icon
         })
     }
-    console.log(router.getRoutes())
+    //列出所有的路由
+    //console.log(router.getRoutes())
 
     router.push({ name: name })
     activeTabName.value = name

@@ -9,6 +9,7 @@
     "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs --fix --ignore-path .gitignore"
   },
   "dependencies": {
+    "@npkg/tinymce-plugins": "^0.0.7",
     "@tinymce/tinymce-vue": "^5.1.0",
     "axios": "^1.4.0",
     "element-plus": "^2.3.8",

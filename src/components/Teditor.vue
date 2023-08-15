@@ -1,5 +1,5 @@
 <script setup>
-import { ref, reactive, onMounted } from 'vue'
+import { ref, reactive, onMounted,watch } from 'vue'
 import { tinyMceUpFile } from '@/apis/tinymceUpAPI'
 import tinymce from 'tinymce/tinymce' //tinymce默认hidden，不引入不显示
 import Editor from '@tinymce/tinymce-vue'
@@ -30,7 +30,9 @@ import "tinymce/plugins/insertdatetime"; //时间插入
 import "tinymce/plugins/visualchars";//显示不可见字符visualblocks
 import "tinymce/plugins/visualblocks";//显示区块边框spellchecker  axupimgs
 //导入多图上传和首行缩进二字符
-
+//import 'tinymce/plugins/axupimgs';
+//import '../../public/tinymce/axupimgs'
+//import '../../public/tinymce/indent2em/plugin.js'
 //子传父
 const emits = defineEmits(['getContent']);
 //参数父传子
@@ -48,16 +50,16 @@ const props = defineProps({
 });
 const init = reactive({
     selector: 'textarea',
-    width: 1000,
-    height: 900,
+    width: 1230,
+    height: 850,
     language_url: '/tinymce/langs/zh-Hans.js',
     language: 'zh-Hans',
     // 皮肤：这里引入的是public下的资源文件
     skin_url: '/tinymce/skins/ui/oxide',
     // skin_url: 'tinymce/skins/ui/oxide-dark',//黑色系
     placeholder: '文章内容...',
-    // plugins: this.plugins,
-    // toolbar: this.toolbar,
+    //获取焦点是出现提示边框
+    highlight_on_focus:true, 
 
     content_css: '/tinymce/skins/content/default/content.css',
     //可以设置的字体大小
@@ -67,12 +69,18 @@ const init = reactive({
     paste_data_images: true,  //图片是否可粘贴
     branding: false,
     //需要导入的插件
-    plugins: 'lists image media table wordcount save preview code help visualchars visualblocks link insertdatetime pagebreak searchreplace axupimgs indent2em importword',
+    external_plugins: {
+        'axupimgs': 'tinymce/axupimgs/plugin.js',
+        'indent2em': 'tinymce/indent2em/plugin.js',
+        'help': 'tinymce/help/plugin.js',
+        // 'importword':'../../tinymce/importword/plugin.js' // 导入word插件不可用，不用试了 'tinymce/importword/plugin.js',
+    },
+    plugins: 'lists image media table wordcount save preview code help visualchars visualblocks link insertdatetime pagebreak searchreplace axupimgs indent2em',
     toolbar:
-        'fontfamily fontsize forecolor backcolor removeformat indent2em formatselect undo redo copy cut paste print  wordcount ltr rtl visualchars visualblocks toc spellchecker searchreplace nonbreaking link media image axupimgs outdent indent aligncenter alignleft alignright alignjustify lineheight  underline bold italic  strikethrough h1 h2 h3 blockquote numlist bullist table hr charmap insertdatetime subscript superscript codesample code preview importword',
+        'fontfamily fontsize forecolor backcolor removeformat indent2em formatselect undo redo copy cut paste print  wordcount ltr rtl visualchars visualblocks toc spellchecker searchreplace nonbreaking link media image axupimgs outdent indent aligncenter alignleft alignright alignjustify lineheight  underline bold italic  strikethrough h1 h2 h3 blockquote numlist bullist table hr charmap insertdatetime subscript superscript codesample code preview',
     menubar: true,
     menu: {
-        file: { title: 'File', items: 'newdocument restoredraft save | preview | importword | export print' },
+        file: { title: 'File', items: 'newdocument restoredraft save | preview |  export print' },
         edit: { title: 'Edit', items: 'undo redo | cut copy paste pastetext | selectall | searchreplace' },
         view: { title: 'View', items: 'code | visualaid visualchars visualblocks | spellchecker | preview fullscreen | showcomments' },
         insert: { title: 'Insert', items: 'image link media addcomment pageembed template codesample inserttable | charmap emoticons hr | pagebreak nonbreaking anchor tableofcontents | insertdatetime' },
@@ -103,7 +111,7 @@ const init = reactive({
             let file = inputElem.files[0]; //获取文件信息
             // const ph = import.meta.env.VITE_APP_IMAGE_URL;
             let params = new FormData();
-            let type=0
+            let type = 0
             upurl = "Files/UpFile";
             params.append("file", file);
             if (file.type.slice(0, 5) == "video") {
@@ -114,7 +122,7 @@ const init = reactive({
                 params.append("type", '1');
             } else {
                 params.append("type", '2');
-                type=2
+                type = 2
             }
             if (file.type.slice(0, 5) == "image" && file.size / 1024 / 1024 > 2) {
                 alert("上传失败，图片大小请控制在2M以内");
@@ -141,7 +149,7 @@ const init = reactive({
                                 console.log(res);
                                 //上传成功，在回调函数里填入文件路径
                                 //没有用到这个回调
-                               // callback(ph + res.data);
+                                // callback(ph + res.data);
                             }
                         } else {
                             console.log(res);
@@ -151,28 +159,6 @@ const init = reactive({
                     .catch(() => {
                         alert("上传出错，服务器开小差了呢");
                     });
-
-                // request
-                //     .post(upurl, params, config)
-                //     .then((res) => {
-                //         if (res.code == 200) {
-                //             if (res.data.url) {
-                //                 callback(res.data.url, {  //callback(ph + res.data.url, {
-                //                     text: res.data.alt,
-                //                     title: res.data.name,
-                //                 });
-                //             } else {
-                //                 console.log(res);
-                //                 //上传成功，在回调函数里填入文件路径
-                //                 callback(ph + res.data);
-                //             }
-                //         } else {
-                //             alert("上传失败");
-                //         }
-                //     })
-                //     .catch(() => {
-                //         alert("上传出错，服务器开小差了呢");
-                //     });
             }
         };
     },
@@ -201,34 +187,82 @@ const init = reactive({
             }
         })
     },
-
+    //图像上传，这里仅供多图在传插件使用，可以在插件中修改
+    //blobInfo 每次的文件对象 success 成功返回文件路径  failure 失败
+    images_upload: function (blobInfo, success, failure) {
+        if (blobInfo.blob().size / 1024 / 1024 > 10) {
+            failure('图片不能大于10MB ');
+            return;   //         return;
+        } else {
+            let params = new FormData()
+            params.append('file', blobInfo.blob())
+            params.append("type", '1');
+            tinyMceUpFile('Files/UpFile', params).then(res => {
+                if (res.status == 200) {
+                    success(res.data.url)
+                    return;
+                }
+                else {
+                    failure(res.data.message);
+                    return
+                }
+            })
+        }
+    },
+    
     // convert_urls: false,
     // 初始化完成
-    init_instance_callback: (editor) => {
-        console.log("初始化完成：", editor)
-    },
+    // init_instance_callback: (editor) => {
+    //    // console.log("初始化完成：", editor)
+    // },
 })
 const textContent = ref(props.content)
-const getContents = () => {
-    if (textContent.value) return textContent.value;
-    return '';
-};
+//const textStr=ref('')
 //在onMounted中初始化编辑器
 onMounted(() => {
     tinymce.init({});
+    //textContent.value=props.content
 });
-//将方法外露给父组件
+//监听外部传递进来的的数据变化
+watch(
+  () => props.content,
+  () => {
+    textContent.value = props.content;
+    emits('getContent', textContent.value);
+  },
+);
+//监听富文本中的数据变化
+watch(
+  () => textContent.value,
+  () => {
+    //console.log(`子${textContent.value}`)
+    //console.log(`子TESTSTR${textContent.value}`)
+    emits('getContent', textContent.value);
+  },
+);
+const getContents = () => {
+    console.log(textContent.value);//此方法调用的为初始值
+    if (textContent.value) return textContent.value;
+    return '';
+};
+//将方法外露给父组件 此方法传出的值为初始值？？？？？
 defineExpose({
     getContents,
 });
+
 </script>
 <template>
     <div class="timymce-box">
-        <editor v-model="textContent" :init="init" :disabled="disabled" @onClick="onClick"></editor>
+        <editor v-model="textContent" :init="init" :disabled="disabled"></editor>
+        <el-button type="primary" @click="getContents">子组件按钮</el-button>
     </div>
 </template>
 <style scoped>
 .tinymce-box {
     margin: 20px;
+}
+.tinymce-editr{
+    width: 890px;
+    height: 700px;
 }
 </style>
