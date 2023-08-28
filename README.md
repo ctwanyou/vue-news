@@ -1,4 +1,4 @@
-#用于VUE新闻管理系统前端开发，供自己学习使用
+# 用于VUE新闻管理系统前端开发，供自己学习使用
 # vue-news
 
 This template should help get you started developing with Vue 3 in Vite.
